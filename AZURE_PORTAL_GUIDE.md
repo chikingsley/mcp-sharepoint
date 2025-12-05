@@ -6,7 +6,7 @@
 
 Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
 
-### Steps:
+### Steps
 
 1. Navigate to **Microsoft Entra ID** (formerly Azure Active Directory)
 2. Go to **App registrations** → **New registration**
@@ -15,7 +15,8 @@ Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
 5. Leave **Redirect URI** empty (not needed for service accounts)
 6. Click **Register**
 
-### Save these values:
+### Save these values
+
 - **Application (client) ID** → This is your `SHP_ID_APP`
 - **Directory (tenant) ID** → This is your `SHP_TENANT_ID`
 
@@ -44,10 +45,12 @@ Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
 7. **⚠️ CRITICAL:** Click **Grant admin consent for [your organization]**
 8. Confirm by clicking **Yes**
 
-### Recommended Permission:
+### Recommended Permission
+
 - **Sites.Selected** - Allows access only to specific sites you assign (more secure)
 
-### Alternative Permission:
+### Alternative Permission
+
 - **Sites.ReadWrite.All** - Allows access to all SharePoint sites (easier setup, less secure)
 
 ---
@@ -59,9 +62,11 @@ Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
 ### Option A: Using SharePoint Admin Center (Easiest)
 
 1. Open in browser:
-   ```
+
+   ```http
    https://[your-tenant]-admin.sharepoint.com/_layouts/15/appinv.aspx
    ```
+
    Example: `https://sofias219-admin.sharepoint.com/_layouts/15/appinv.aspx`
 
 2. Fill the form:
@@ -71,6 +76,7 @@ Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
    - **Redirect URI**: `https://[your-tenant].sharepoint.com` (e.g., `https://sofias219.sharepoint.com`)
 
 3. In **Permission Request XML**, paste:
+
    ```xml
    <AppPermissionRequests AllowAppOnlyPolicy="true">
      <AppPermissionRequest Scope="http://sharepoint/content/sitecollection/web" Right="Write" />
@@ -87,9 +93,11 @@ Access the Azure portal: [https://portal.azure.com](https://portal.azure.com)
 If you want to assign to a specific site:
 
 1. Open:
-   ```
+
+   ```http
    https://[your-tenant].sharepoint.com/sites/[site-name]/_layouts/15/appinv.aspx
    ```
+
    Example: `https://sofias219.sharepoint.com/sites/Clientes/_layouts/15/appinv.aspx`
 
 2. Follow the same steps as Option A
@@ -112,21 +120,24 @@ SHP_DOC_LIBRARY=Shared Documents
 
 ## Permission Scopes Reference
 
-### For Site-specific access (Write):
+### For Site-specific access (Write)
+
 ```xml
 <AppPermissionRequests AllowAppOnlyPolicy="true">
   <AppPermissionRequest Scope="http://sharepoint/content/sitecollection/web" Right="Write" />
 </AppPermissionRequests>
 ```
 
-### For Site Collection Full Control:
+### For Site Collection Full Control
+
 ```xml
 <AppPermissionRequests AllowAppOnlyPolicy="true">
   <AppPermissionRequest Scope="http://sharepoint/content/sitecollection" Right="FullControl" />
 </AppPermissionRequests>
 ```
 
-### For Tenant-wide access:
+### For Tenant-wide access
+
 ```xml
 <AppPermissionRequests AllowAppOnlyPolicy="true">
   <AppPermissionRequest Scope="http://sharepoint/content/tenant" Right="Write" />
@@ -138,15 +149,18 @@ SHP_DOC_LIBRARY=Shared Documents
 ## Troubleshooting
 
 ### Error: "Access Denied" (403)
+
 - Verify admin consent was granted in step 3
 - Check that the app is assigned to the site in step 4
 - Ensure the client secret hasn't expired
 
 ### Error: "Invalid Client"
+
 - Verify `SHP_ID_APP` and `SHP_TENANT_ID` are correct
 - Check that `SHP_ID_APP_SECRET` was copied correctly
 
 ### Error: "Site not found"
+
 - Verify `SHP_SITE_URL` is correct and accessible
 - Check that `SHP_DOC_LIBRARY` exists in the site
 
