@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.12"]
     steps:
       - uses: actions/checkout@v4
 
@@ -70,11 +70,19 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
 
-      - name: Run tests
-        run: uv run pytest tests/ -v
+      - name: Run tests with coverage
+        run: uv run pytest tests/ -v --cov=mcp_sharepoint --cov-report=xml
         env:
-          # Minimal env vars for tests that don't hit SharePoint
           SHP_SITE_URL: "https://example.sharepoint.com"
           SHP_ID_APP: "test-app-id"
           SHP_ID_APP_SECRET: "test-secret"
           SHP_DOC_LIBRARY: "Shared Documents"
+          SHP_TENANT_ID: "test-tenant-id"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

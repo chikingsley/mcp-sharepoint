@@ -1,8 +1,11 @@
 # SharePoint MCP Server
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/mcp-sharepoint.svg)](https://badge.fury.io/py/mcp-sharepoint)
 [![CI](https://github.com/chikingsley/mcp-sharepoint/actions/workflows/ci.yml/badge.svg)](https://github.com/chikingsley/mcp-sharepoint/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/chikingsley/mcp-sharepoint/graph/badge.svg)](https://codecov.io/gh/chikingsley/mcp-sharepoint)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A comprehensive MCP Server for seamless integration with Microsoft SharePoint, enabling MCP clients to interact with documents, folders and other SharePoint resources. Built with efficiency and ease of use in mind, supporting both text and binary file operations.
 
