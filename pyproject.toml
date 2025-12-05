@@ -28,6 +28,7 @@ Issues = "https://github.com/chikingsley/mcp-sharepoint/issues"
 
 [project.scripts]
 mcp-sharepoint = "mcp_sharepoint:main"
+mcp-sharepoint-setup = "mcp_sharepoint.setup:setup"
 
 [build-system]
 requires = ["hatchling"]

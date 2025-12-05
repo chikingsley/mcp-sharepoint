@@ -1,11 +1,49 @@
-# Python-generated files
+# Python
 __pycache__/
-*.py[oc]
-*.egg*
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
 
-# Virtual and local environments
-venv*
-dist
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment variables
 .env
-.venv
-mcp_sharepoint.log
+.env.local
+
+# Certificates (contain private keys)
+certs/
+*.pem
+*.key
+*.crt
+*.pfx
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing/Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Ruff
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db

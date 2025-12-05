@@ -10,81 +10,9 @@ A comprehensive MCP Server for seamless integration with Microsoft SharePoint, e
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@Sofias-ai/mcp-sharepoint/badge" alt="SharePoint Server MCP server" />
 </a>
 
-## Key Features
+## Quick Start
 
-This server provides a clean, efficient interface to SharePoint resources through the Model Context Protocol (MCP), with optimized operations for document management and content processing.
-
-### Available Tools
-
-The server implements **12 comprehensive tools** for complete SharePoint management:
-
-#### Folder Management
-- **`List_SharePoint_Folders`**: Lists all folders in a specified directory or root
-- **`Create_Folder`**: Creates new folders in specified directories
-- **`Delete_Folder`**: Safely deletes empty folders from SharePoint
-- **`Get_SharePoint_Tree`**: Gets a recursive tree view of SharePoint folder structure
-
-#### Document Management
-- **`List_SharePoint_Documents`**: Fetches all documents within a specified folder with metadata
-- **`Get_Document_Content`**: Retrieves and processes document content (supports text extraction from PDF, Word, Excel)
-- **`Upload_Document`**: Uploads new documents to specified folders (supports both text and binary content)
-- **`Upload_Document_From_Path`**: Direct file upload from local filesystem for large files
-- **`Update_Document`**: Updates content of existing documents
-- **`Delete_Document`**: Removes documents from specified folders
-- **`Download_Document`**: Downloads documents from SharePoint to local filesystem
-
-#### Metadata Operations
-- **`Get_File_Metadata`**: Retrieves metadata fields from a SharePoint file
-- **`Update_File_Metadata`**: Updates metadata fields for a SharePoint file
-
-### Advanced Content Processing
-
-The server includes intelligent content extraction capabilities:
-
-- **Excel Files**: Extracts data from all sheets, converts to readable text format (first 50 rows per sheet)
-- **Word Documents**: Processes paragraphs and tables, maintaining structure
-- **PDF Files**: Full text extraction using PyMuPDF for accurate content parsing
-- **Text Files**: Direct processing of various text formats (JSON, XML, HTML, MD, code files)
-- **Binary Support**: Base64 encoding/decoding for seamless binary file handling
-
-## Architecture
-
-The server is built with resource efficiency and maintainability in mind:
-
-- **Efficient SharePoint API usage** with selective property loading to minimize bandwidth
-- **Smart error handling** through decorators for cleaner, more reliable code
-- **Input validation** with Pydantic for secure path handling
-- **Clear separation of concerns** between resource management and tool implementation
-- **Optimized content handling** for both text and binary files with automatic type detection
-- **Configurable tree operations** with depth limits and batch processing for large directories
-- **Type-checked codebase** with ruff linting and ty type checking
-
-## Setup
-
-1. Register an app in Azure AD with appropriate SharePoint permissions (see [Azure Portal Guide](AZURE_PORTAL_GUIDE.md))
-2. Obtain the client ID and client secret for the registered app
-3. Identify your SharePoint site URL and the document library path you want to work with
-
-## Environment Variables
-
-The server requires these environment variables:
-
-### Required Variables
-- `SHP_ID_APP`: Your Azure AD application client ID
-- `SHP_ID_APP_SECRET`: Your Azure AD application client secret
-- `SHP_SITE_URL`: The URL of your SharePoint site
-- `SHP_DOC_LIBRARY`: Path to the document library (default: "Shared Documents/mcp_server")
-- `SHP_TENANT_ID`: Your Microsoft tenant ID
-
-### Optional Configuration Variables
-- `SHP_MAX_DEPTH`: Maximum folder depth for tree operations (default: 15)
-- `SHP_MAX_FOLDERS_PER_LEVEL`: Maximum folders to process per level (default: 100)
-- `SHP_LEVEL_DELAY`: Delay in seconds between processing levels (default: 0.5)
-- `SHP_BATCH_DELAY`: Delay in seconds between batch operations (default: 0.1)
-
-## Quickstart
-
-### Installation
+### 1. Install
 
 Using uvx (recommended):
 
@@ -95,117 +23,192 @@ uvx mcp-sharepoint
 Or install with uv:
 
 ```bash
-uv add mcp-sharepoint
+uv pip install mcp-sharepoint
 ```
 
-Or install from PyPI:
+### 2. Create Azure App & Certificate
 
 ```bash
-pip install mcp-sharepoint
+# Generate certificate for authentication
+uvx mcp-sharepoint-setup
+# Or if installed: mcp-sharepoint-setup
 ```
 
-### Claude Desktop Integration
+This creates a certificate and shows you exactly what to do next.
 
-To integrate with Claude Desktop, update the configuration file:
+### 3. Configure Azure (One-time setup)
 
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-On macOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+1. Go to [Azure Portal](https://portal.azure.com) → **App registrations** → **New registration**
+2. Name it (e.g., `mcp-sharepoint`), click **Register**
+3. Save the **Application (client) ID** and **Directory (tenant) ID**
+4. Go to **Certificates & secrets** → **Certificates** → **Upload certificate**
+   - Upload the `certs/sharepoint.crt` file generated by the setup command
+5. Go to **API permissions** → **Add permission** → **SharePoint** → **Application permissions**
+   - Add `Sites.FullControl.All` (or `Sites.ReadWrite.All` for read/write only)
+   - Click **Grant admin consent**
 
-#### Using uvx (Recommended)
+### 4. Configure Environment
+
+Create a `.env` file:
+
+```env
+SHP_ID_APP=your-application-client-id
+SHP_TENANT_ID=your-directory-tenant-id
+SHP_SITE_URL=https://your-tenant.sharepoint.com/sites/your-site
+SHP_DOC_LIBRARY=Shared Documents
+SHP_CERT_PATH=certs/sharepoint.pem
+SHP_CERT_THUMBPRINT=your-certificate-thumbprint
+```
+
+### 5. Run
+
+```bash
+mcp-sharepoint
+```
+
+You should see:
+```
+Connected to SharePoint: YourSiteName
+MCP server ready - waiting for connections...
+```
+
+## Claude Desktop Integration
+
+Add to your Claude Desktop config:
+
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows:** `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
-"mcpServers": {
-  "sharepoint": {
-    "command": "uvx",
-    "args": ["mcp-sharepoint"],
-    "env": {
-      "SHP_ID_APP": "your-app-id",
-      "SHP_ID_APP_SECRET": "your-app-secret",
-      "SHP_SITE_URL": "https://your-tenant.sharepoint.com/sites/your-site",
-      "SHP_DOC_LIBRARY": "Shared Documents/your-folder",
-      "SHP_TENANT_ID": "your-tenant-id"
+{
+  "mcpServers": {
+    "sharepoint": {
+      "command": "uvx",
+      "args": ["mcp-sharepoint"],
+      "env": {
+        "SHP_ID_APP": "your-app-id",
+        "SHP_TENANT_ID": "your-tenant-id",
+        "SHP_SITE_URL": "https://your-tenant.sharepoint.com/sites/your-site",
+        "SHP_DOC_LIBRARY": "Shared Documents",
+        "SHP_CERT_PATH": "/path/to/certs/sharepoint.pem",
+        "SHP_CERT_THUMBPRINT": "your-thumbprint"
+      }
     }
   }
 }
 ```
 
-#### Direct Command
+## Available Tools
 
-```json
-"mcpServers": {
-  "sharepoint": {
-    "command": "mcp-sharepoint",
-    "env": {
-      "SHP_ID_APP": "your-app-id",
-      "SHP_ID_APP_SECRET": "your-app-secret",
-      "SHP_SITE_URL": "https://your-tenant.sharepoint.com/sites/your-site",
-      "SHP_DOC_LIBRARY": "Shared Documents/your-folder",
-      "SHP_TENANT_ID": "your-tenant-id"
-    }
-  }
-}
-```
+The server provides **14 tools** for complete SharePoint management:
+
+### Folder Management
+- **`List_SharePoint_Folders`** - List folders in a directory
+- **`Create_Folder`** - Create new folders
+- **`Delete_Folder`** - Delete empty folders
+- **`Get_SharePoint_Tree`** - Get recursive folder structure
+
+### Document Management
+- **`List_SharePoint_Documents`** - List documents with metadata
+- **`Get_Document_Content`** - Read document content (supports PDF, Word, Excel)
+- **`Upload_Document`** - Upload new documents (text or binary)
+- **`Upload_Document_From_Path`** - Upload from local filesystem
+- **`Update_Document`** - Update existing documents
+- **`Delete_Document`** - Remove documents
+- **`Download_Document`** - Download to local filesystem
+
+### Metadata Operations
+- **`Get_File_Metadata`** - Get file metadata fields
+- **`Update_File_Metadata`** - Update file metadata
+
+## Content Processing
+
+Intelligent content extraction for common file types:
+
+- **PDF** - Full text extraction via PyMuPDF
+- **Word (.docx)** - Paragraphs and tables
+- **Excel (.xlsx)** - All sheets, first 50 rows each
+- **Text files** - JSON, XML, HTML, MD, code files
+- **Binary** - Base64 encoding for other types
+
+## Environment Variables
+
+### Required
+
+| Variable | Description |
+|----------|-------------|
+| `SHP_ID_APP` | Azure AD application client ID |
+| `SHP_TENANT_ID` | Microsoft tenant ID |
+| `SHP_SITE_URL` | SharePoint site URL |
+| `SHP_DOC_LIBRARY` | Document library path (default: `Shared Documents`) |
+| `SHP_CERT_PATH` | Path to certificate PEM file |
+| `SHP_CERT_THUMBPRINT` | Certificate thumbprint (SHA1) |
+
+### Optional
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SHP_MAX_DEPTH` | 15 | Max folder depth for tree operations |
+| `SHP_MAX_FOLDERS_PER_LEVEL` | 100 | Max folders per level |
+| `SHP_LEVEL_DELAY` | 0.5 | Delay between levels (seconds) |
+| `SHP_BATCH_DELAY` | 0.1 | Delay between batches (seconds) |
 
 ## Development
 
 ### Requirements
 
 - Python 3.12+
-- [uv](https://docs.astral.sh/uv/) for dependency management
+- [uv](https://docs.astral.sh/uv/)
 
-### Local Development
+### Setup
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/chikingsley/mcp-sharepoint.git
-   cd mcp-sharepoint
-   ```
+```bash
+git clone https://github.com/chikingsley/mcp-sharepoint.git
+cd mcp-sharepoint
+uv sync --group dev
+```
 
-2. Install dependencies:
-   ```bash
-   uv sync --group dev
-   ```
+### Run Locally
 
-3. Create a `.env` file with your SharePoint credentials:
-   ```env
-   SHP_ID_APP=your-app-id
-   SHP_ID_APP_SECRET=your-app-secret
-   SHP_SITE_URL=https://your-tenant.sharepoint.com/sites/your-site
-   SHP_DOC_LIBRARY=Shared Documents/your-folder
-   SHP_TENANT_ID=your-tenant-id
-   ```
-
-4. Run the server:
-   ```bash
-   uv run mcp-sharepoint
-   ```
+```bash
+uv run mcp-sharepoint
+```
 
 ### Code Quality
 
 ```bash
-# Lint code
-uv run ruff check src/
-
-# Format code
-uv run ruff format src/
-
-# Type check
-uv run ty check src/
-
-# Run tests
-uv run pytest
+uv run ruff check src/    # Lint
+uv run ruff format src/   # Format
+uv run ty check src/      # Type check
+uv run pytest             # Tests
 ```
 
-### Debugging
-
-For debugging the MCP server, you can use the [MCP Inspector](https://github.com/modelcontextprotocol/inspector):
+### Debugging with MCP Inspector
 
 ```bash
 npx @modelcontextprotocol/inspector -- uv run mcp-sharepoint
 ```
 
+## Troubleshooting
+
+### "Authentication failed" (401)
+
+- Verify certificate is uploaded to Azure AD
+- Check thumbprint matches
+- Ensure certificate hasn't expired
+
+### "Access denied" (403)
+
+- Grant admin consent for API permissions
+- Verify `Sites.FullControl.All` or `Sites.ReadWrite.All` is granted
+
+### "Site not found" (404)
+
+- Check `SHP_SITE_URL` is correct
+- Verify site exists and is accessible
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
 Copyright (c) 2025 Chieji Mofor

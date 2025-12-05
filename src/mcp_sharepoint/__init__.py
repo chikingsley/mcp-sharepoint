@@ -1,11 +1,3 @@
-import asyncio
+from .server import run as main
 
-from . import server
-
-
-def main():
-    """Main entry point for the package."""
-    asyncio.run(server.main())
-
-
-__all__ = ["main", "server"]
+__all__ = ["main"]
