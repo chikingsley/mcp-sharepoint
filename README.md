@@ -1,17 +1,13 @@
-# SharePoint MCP Server
+# SharePoint MCP Server (Certificate Auth)
 
-[![PyPI version](https://badge.fury.io/py/mcp-sharepoint.svg)](https://badge.fury.io/py/mcp-sharepoint)
+[![PyPI version](https://badge.fury.io/py/mcp-sharepoint-cert.svg)](https://badge.fury.io/py/mcp-sharepoint-cert)
 [![CI](https://github.com/chikingsley/mcp-sharepoint/actions/workflows/ci.yml/badge.svg)](https://github.com/chikingsley/mcp-sharepoint/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/chikingsley/mcp-sharepoint/graph/badge.svg)](https://codecov.io/gh/chikingsley/mcp-sharepoint)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive MCP Server for seamless integration with Microsoft SharePoint, enabling MCP clients to interact with documents, folders and other SharePoint resources. Built with efficiency and ease of use in mind, supporting both text and binary file operations.
-
-<a href="https://glama.ai/mcp/servers/@Sofias-ai/mcp-sharepoint">
-  <img width="380" height="200" src="https://glama.ai/mcp/servers/@Sofias-ai/mcp-sharepoint/badge" alt="SharePoint Server MCP server" />
-</a>
+A comprehensive MCP Server for seamless integration with Microsoft SharePoint using **certificate-based authentication**. Enables MCP clients to interact with documents, folders and other SharePoint resources securely without client secrets.
 
 ## Quick Start
 
@@ -20,21 +16,21 @@ A comprehensive MCP Server for seamless integration with Microsoft SharePoint, e
 Using uvx (recommended):
 
 ```bash
-uvx mcp-sharepoint
+uvx mcp-sharepoint-cert
 ```
 
 Or install with uv:
 
 ```bash
-uv pip install mcp-sharepoint
+uv pip install mcp-sharepoint-cert
 ```
 
 ### 2. Create Azure App & Certificate
 
 ```bash
 # Generate certificate for authentication
-uvx mcp-sharepoint-setup
-# Or if installed: mcp-sharepoint-setup
+uvx mcp-sharepoint-cert-setup
+# Or if installed: mcp-sharepoint-cert-setup
 ```
 
 This creates a certificate and shows you exactly what to do next.
@@ -66,7 +62,7 @@ SHP_CERT_THUMBPRINT=your-certificate-thumbprint
 ### 5. Run
 
 ```bash
-mcp-sharepoint
+mcp-sharepoint-cert
 ```
 
 You should see:
@@ -87,7 +83,7 @@ Add to your Claude Desktop config:
   "mcpServers": {
     "sharepoint": {
       "command": "uvx",
-      "args": ["mcp-sharepoint"],
+      "args": ["mcp-sharepoint-cert"],
       "env": {
         "SHP_ID_APP": "your-app-id",
         "SHP_TENANT_ID": "your-tenant-id",
@@ -174,7 +170,7 @@ uv sync --group dev
 ### Run Locally
 
 ```bash
-uv run mcp-sharepoint
+uv run mcp-sharepoint-cert
 ```
 
 ### Code Quality
@@ -189,7 +185,7 @@ uv run pytest             # Tests
 ### Debugging with MCP Inspector
 
 ```bash
-npx @modelcontextprotocol/inspector -- uv run mcp-sharepoint
+npx @modelcontextprotocol/inspector -- uv run mcp-sharepoint-cert
 ```
 
 ## Troubleshooting

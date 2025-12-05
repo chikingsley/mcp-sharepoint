@@ -147,7 +147,7 @@ def setup():
         "mcpServers": {
             "sharepoint": {
                 "command": "uvx",
-                "args": ["mcp-sharepoint"],
+                "args": ["mcp-sharepoint-cert"],
                 "env": {
                     "SHP_ID_APP": app_id,
                     "SHP_TENANT_ID": tenant_id,
